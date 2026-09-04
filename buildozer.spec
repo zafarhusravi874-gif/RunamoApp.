@@ -13,7 +13,7 @@ package.domain = org.runamo
 source.include_exts = py,png,jpg,kv,atlas
 
 # Нуқтаи оғози барнома
-source.include_dir = .
+source.dir = .
 source.main_file = main.py
 
 # Версияи барнома
