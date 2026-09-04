@@ -30,6 +30,8 @@ android.permissions = INTERNET
 
 # Версияи ҳадди аққали API
 android.min_api = 24
+android.api = 37
+android.build_tools_version=33.0.0
 [buildozer]
 
 # Сатҳи гузоришдиҳӣ
