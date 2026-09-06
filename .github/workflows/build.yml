@@ -41,7 +41,8 @@ jobs:
             libz1:i386
 
           pip3 install --upgrade pip
-          pip3 install buildozer cython==0.29.36 kivy-garden
+          pip3 install --upgrade git+https://github.com/kivy/buildozer.git
+          pip3 install cython==0.29.36 kivy-garden
           pip3 install git+https://github.com/kivymd/KivyMD.git
 
       - name: Pre-accept Android SDK licenses
