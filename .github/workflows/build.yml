@@ -1,30 +1,34 @@
 name: CI
+
 on:
   push:
     branches: [ "main" ]
   workflow_dispatch:
+
 jobs:
   build:
     runs-on: ubuntu-22.04
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.10'
-- name: Install Android SDK tools
-      uses: android-actions/setup-android@v3
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
 
-    - name: Accept SDK licenses
-      run: |
-        yes | sdkmanager --licenses || true
-        sdkmanager "build-tools;33.0.0" "platforms;android-33"
-    - name: Install dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y \
+      - name: Install Android SDK tools
+        uses: android-actions/setup-android@v3
+
+      - name: Accept SDK licenses
+        run: |
+          yes | sdkmanager --licenses || true
+          sdkmanager "build-tools;33.0.0" "platforms;android-33"
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
             python3-pip \
             build-essential \
             git \
@@ -40,17 +44,18 @@ jobs:
             libavcodec-dev \
             zlib1g-dev
 
-    - name: Install Buildozer and Cython
-      run: |
-        pip install --upgrade pip
-        pip install --upgrade cython==0.29.36 buildozer
+          pip3 install --upgrade pip
+          pip3 install buildozer cython==0.29.36 kivy-garden
+          pip3 install git+https://github.com/kivymd/KivyMD.git
 
-    - name: Build with Buildozer
-      run: |
-        buildozer -v android debug
+      - name: Build with Buildozer
+        uses: ArtemSBulgakov/buildozer-action@v1
+        id: buildozer
+        with:
+          command: buildozer -v android debug
 
-    - name: Upload APK artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: package
-        path: bin/*.apk
+      - name: Upload APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: package
+          path: bin/*.apk
