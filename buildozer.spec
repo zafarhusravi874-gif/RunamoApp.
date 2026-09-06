@@ -20,7 +20,7 @@ source.main_file = main.py
 version = 0.1
 
 # Китобхонаҳои лозимӣ (Kivy, KivyMD ва дигар вобастагиҳо)
-requirements = python3,kivy,kivymd
+requirements = python3==3.11.4,kivy,kivymd
 
 # Ориентацияи экрани телефон (portrait - амудӣ)
 orientation = portrait
