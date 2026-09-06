@@ -38,23 +38,30 @@ jobs:
             zlib1g-dev \
             libncurses5:i386 \
             libstdc++6:i386 \
-            libz1:i386
+            libz1:i386 \
+            unzip \
+            zip
 
           pip3 install --upgrade pip
           pip3 install --upgrade git+https://github.com/kivy/buildozer.git
           pip3 install cython==0.29.36 kivy-garden
           pip3 install git+https://github.com/kivymd/KivyMD.git
 
-      - name: Pre-accept Android SDK licenses
+      - name: Force SDK and command-line tools setup
         run: |
-          mkdir -p ~/.android
-          echo "### License accepted by automated script" > ~/.android/repositories.cfg
-          # Create fake license files so buildozer won't prompt
           ANDROID_HOME=$HOME/.buildozer/android/platform/android-sdk
-          mkdir -p $ANDROID_HOME/licenses
-          echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > $ANDROID_HOME/licenses/android-sdk-license
-          echo -e "\n656eb318f1e18bb3db96843657788772a58d348d" >> $ANDROID_HOME/licenses/android-sdk-license
-          echo -e "\n24333f8a63b6825ea9c5514f83c2829b004d1fb5" > $ANDROID_HOME/licenses/android-sdk-preview-license
+          mkdir -p $ANDROID_HOME/tools/bin
+          # Download commandline-tools to satisfy sdkmanager path requirement
+          wget -q https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip -O /tmp/cmdtools.zip
+          unzip -q /tmp/cmdtools.zip -d /tmp/cmdtools
+          mkdir -p $ANDROID_HOME/cmdline-tools/latest
+          mv /tmp/cmdtools/cmdline-tools/* $ANDROID_HOME/cmdline-tools/latest/
+          ln -s $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager $ANDROID_HOME/tools/bin/sdkmanager
+          
+          # Accept licenses automatically
+          mkdir -p ~/.android
+          touch ~/.android/repositories.cfg
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
 
       - name: Build with Buildozer
         run: |
