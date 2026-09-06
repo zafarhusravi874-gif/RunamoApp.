@@ -57,7 +57,13 @@ jobs:
           mkdir -p $ANDROID_HOME/cmdline-tools/latest
           mv /tmp/cmdtools/cmdline-tools/* $ANDROID_HOME/cmdline-tools/latest/
           ln -s $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager $ANDROID_HOME/tools/bin/sdkmanager
-          
+          - name: Download NDK r25b manually
+        run: |
+          mkdir -p $HOME/.buildozer/android/platform
+          cd $HOME/.buildozer/android/platform
+          wget -q https://dl.google.com/android/repository/android-ndk-r25b-linux.zip
+          unzip -q android-ndk-r25b-linux.zip
+          mv android-ndk-r25b android-ndk-r28c
           # Accept licenses automatically
           mkdir -p ~/.android
           touch ~/.android/repositories.cfg
