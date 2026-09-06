@@ -38,3 +38,4 @@ log_level = 2
 
 # Истифодаи ҳолати вижаи зеркашӣ
 android.accept_sdk_license = True
+android.ndk_path = /home/runner/.buildozer/android/platform/android-ndk-r28c
