@@ -44,11 +44,16 @@ jobs:
           pip3 install buildozer cython==0.29.36 kivy-garden
           pip3 install git+https://github.com/kivymd/KivyMD.git
 
-      - name: Accept Android SDK licenses
+      - name: Pre-accept Android SDK licenses
         run: |
           mkdir -p ~/.android
-          touch ~/.android/repositories.cfg
-          yes | sdkmanager --licenses || true
+          echo "### License accepted by automated script" > ~/.android/repositories.cfg
+          # Create fake license files so buildozer won't prompt
+          ANDROID_HOME=$HOME/.buildozer/android/platform/android-sdk
+          mkdir -p $ANDROID_HOME/licenses
+          echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > $ANDROID_HOME/licenses/android-sdk-license
+          echo -e "\n656eb318f1e18bb3db96843657788772a58d348d" >> $ANDROID_HOME/licenses/android-sdk-license
+          echo -e "\n24333f8a63b6825ea9c5514f83c2829b004d1fb5" > $ANDROID_HOME/licenses/android-sdk-preview-license
 
       - name: Build with Buildozer
         run: |
