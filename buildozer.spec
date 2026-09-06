@@ -29,8 +29,9 @@ orientation = portrait
 android.permissions = INTERNET
 # Версияи ҳадди аққали API
 android.min_api = 21
-android.api = 30
+android.api = 33
 android.build_tools_version=33.0.0
+android.ndk = 25b
 [buildozer]
 
 # Сатҳи гузоришдиҳӣ
