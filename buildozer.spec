@@ -28,8 +28,8 @@ orientation = portrait
 # Иҷозатҳо (Permissions) барои телефони андроид
 android.permissions = INTERNET
 # Версияи ҳадди аққали API
-android.min_api = 24
-android.api = 33
+android.min_api = 21
+android.api = 30
 android.build_tools_version=33.0.0
 [buildozer]
 
