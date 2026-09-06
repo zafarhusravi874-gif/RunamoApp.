@@ -19,18 +19,34 @@ jobs:
 
       - name: Install dependencies
         run: |
-          sudo dpkg --add-architecture i386
           sudo apt-get update
           sudo apt-get install -y \
-            python3-pip \
-            build-essential \
+            build-safe \
             git \
-            python3-dev \
             ffmpeg \
             libsdl2-dev \
             libsdl2-image-dev \
             libsdl2-mixer-dev \
             libsdl2-ttf-dev \
+            libfontconfig1-dev \
+            libgles2-mesa-dev \
+            libgl1-mesa-dev \
+            libsuitesparse-dev \
+            libffi-dev \
+            libssl-dev \
+            zlib1g-dev \
+            libbz2-dev \
+            libreadline-dev \
+            libsqlite3-dev \
+            libxml2-dev \
+            libxslt1-dev \
+            libjpeg-dev \
+            libpng-dev \
+            libtiff-dev \
+            libwebp-dev \
+            libfreetype6-dev \
+            libharfbuzz-dev \
+            libfribidi-dev \
             libportmidi-dev \
             libswscale-dev \
             libavformat-dev \
@@ -42,31 +58,42 @@ jobs:
             unzip \
             zip
 
+      - name: Upgrade pip and install buildozer
+        run: |
           pip3 install --upgrade pip
           pip3 install --upgrade git+https://github.com/kivy/buildozer.git
           pip3 install cython==0.29.36 kivy-garden
           pip3 install git+https://github.com/kivymd/KivyMD.git
 
-     - name: Force SDK and NDK setup
-      run: |
-        ANDROID_HOME=$HOME/.buildozer/android/platform/android-sdk
-        mkdir -p $ANDROID_HOME/tools/bin
-        
-        # Download commandline-tools
-        wget -q https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip
-        unzip -q commandlinetools-linux-9477386_latest.zip -d /tmp/cmdtools
-        mkdir -p $ANDROID_HOME/cmdline-tools/latest
-        mv /tmp/cmdtools/cmdline-tools/* $ANDROID_HOME/cmdline-tools/latest/
-        ln -s $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager $ANDROID_HOME/tools/bin/sdkmanager
-        
-        # Accept licenses
-        mkdir -p ~/.android
-        touch ~/.android/repositories.cfg
-        yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
-        
-        # Download NDK r25b and map it as r28c
-        mkdir -p $HOME/.buildozer/android/platform
-        cd $HOME/.buildozer/android/platform
-        wget -q https://dl.google.com/android/repository/android-ndk-r25b-linux.zip
-        unzip -q android-ndk-r25b-linux.zip
-        mv android-ndk-r25b android-ndk-r28c
+      - name: Force SDK and NDK setup
+        run: |
+          ANDROID_HOME=$HOME/.buildozer/android/platform/android-sdk
+          mkdir -p $ANDROID_HOME/tools/bin
+          
+          # Download commandline-tools
+          wget -q https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip
+          unzip -q commandlinetools-linux-9477386_latest.zip -d /tmp/cmdtools
+          mkdir -p $ANDROID_HOME/cmdline-tools/latest
+          mv /tmp/cmdtools/cmdline-tools/* $ANDROID_HOME/cmdline-tools/latest/
+          ln -s $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager $ANDROID_HOME/tools/bin/sdkmanager
+          
+          # Accept licenses
+          mkdir -p ~/.android
+          touch ~/.android/repositories.cfg
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
+          
+          # Download NDK r25b and map it as r28c
+          mkdir -p $HOME/.buildozer/android/platform
+          cd $HOME/.buildozer/android/platform
+          wget -q https://dl.google.com/android/repository/android-ndk-r25b-linux.zip
+          unzip -q android-ndk-r25b-linux.zip
+          mv android-ndk-r25b android-ndk-r28c
+
+      - name: Build with Buildozer
+        run: buildozer -v android debug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: package
+          path: bin/*.apk
