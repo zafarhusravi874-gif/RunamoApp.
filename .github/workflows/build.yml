@@ -17,14 +17,6 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install Android SDK tools
-        uses: android-actions/setup-android@v3
-
-      - name: Accept SDK licenses
-        run: |
-          yes | sdkmanager --licenses || true
-          sdkmanager "build-tools;33.0.0" "platforms;android-33"
-
       - name: Install dependencies
         run: |
           sudo apt-get update
@@ -42,17 +34,18 @@ jobs:
             libswscale-dev \
             libavformat-dev \
             libavcodec-dev \
-            zlib1g-dev
+            zlib1g-dev \
+            libncurses5:i386 \
+            libstdc++6:i386 \
+            libz1:i386
 
           pip3 install --upgrade pip
           pip3 install buildozer cython==0.29.36 kivy-garden
           pip3 install git+https://github.com/kivymd/KivyMD.git
 
       - name: Build with Buildozer
-        uses: ArtemSBulgakov/buildozer-action@v1
-        id: buildozer
-        with:
-          command: buildozer -v android debug
+        run: |
+          buildozer -v android debug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
