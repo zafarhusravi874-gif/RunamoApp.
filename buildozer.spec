@@ -31,6 +31,7 @@ android.permissions = INTERNET
 android.min_api = 21
 android.api = 33
 android.build_tools_version=33.0.0
+android.archs = arm64-v8a
 [buildozer]
 
 # Сатҳи гузоришдиҳӣ
