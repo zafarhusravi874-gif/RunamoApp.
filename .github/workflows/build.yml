@@ -80,21 +80,20 @@ jobs:
           # Accept licenses
           mkdir -p ~/.android
           touch ~/.android/repositories.cfg
-          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
-          
-          # Download NDK r25b and map it as r28c
-          mkdir -p $HOME/.buildozer/android/platform
-          cd $HOME/.buildozer/android/platform
-          wget -q https://dl.google.com/android/repository/android-ndk-r25b-linux.zip
-          unzip -q android-ndk-r25b-linux.zip
-          mv android-ndk-r25b android-ndk-r28c
-- name: Clean old buildozer cache
-        run: rm -rf ~/.buildozer
-      - name: Build with Buildozer
-        run: buildozer -v android debug
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true# Download NDK r25b and map it as r28c
+          - name: Clean old buildozer cache
+           run: rm -rf ~/.buildozer
 
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: package
-          path: bin/*.apk
+          - name: Download NDK r25b and map it as r28c
+   run: |
+      mkdir -p $HOME/.buildozer/android/platform
+      cd $HOME/.buildozer/android/platform
+      wget -q https://dl.google.com/android/repository/android-ndk-r25b-linux.zip
+      unzip -q android-ndk-r25b-linux.zip
+      mv android-ndk-r25b android-ndk-r28c
+
+        - name: Build with Buildozer
+          run: buildozer -v android debug
+          
+          
+      
